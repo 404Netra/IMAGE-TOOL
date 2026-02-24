@@ -3,234 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Studio - All-in-One Tools 🛠️</title>
+    <title>PixelTools | All-in-One Image & PDF Suite</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --primary: #4f46e5;
-            --secondary: #ec4899;
-            --bg: #f3f4f6;
-            --text: #1f2937;
+            --primary: #e53e3e; /* Professional Red like iLovePDF */
+            --dark: #33333b;
+            --light-bg: #f8f9fa;
         }
 
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--light-bg); color: var(--dark); }
 
-        .container {
-            max-width: 1000px;
-            width: 100%;
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
+        /* Navigation */
+        nav { background: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
 
-        header { text-align: center; margin-bottom: 2rem; }
-        h1 { margin: 0; font-size: 2rem; color: var(--primary); }
+        /* Hero Section */
+        .hero { text-align: center; padding: 60px 20px; background: white; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .hero p { color: #666; font-size: 1.1rem; }
 
-        /* Tools Grid Section */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
+        /* Tools Grid (Matches Image 1) */
+        .tools-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; padding: 40px 20px; }
+        .tool-card { background: white; padding: 30px; border-radius: 12px; text-align: center; transition: 0.3s; cursor: pointer; border: 1px solid #eee; text-decoration: none; color: inherit; }
+        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--primary); }
+        .tool-icon { font-size: 2.5rem; margin-bottom: 15px; display: block; }
+        .tool-card h3 { margin: 10px 0; font-size: 1.1rem; }
 
-        .tool-card {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        /* Workspace Section */
+        #workspace { max-width: 800px; margin: 20px auto; background: white; padding: 40px; border-radius: 15px; display: none; text-align: center; }
+        .upload-box { border: 2px dashed #ccc; padding: 40px; border-radius: 10px; cursor: pointer; background: #fffafb; }
+        .upload-box:hover { border-color: var(--primary); }
 
-        .tool-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .tool-card i { font-size: 2rem; display: block; margin-bottom: 0.5rem; }
-
-        /* Upload and Controls */
-        .upload-zone {
-            border: 2px dashed #d1d5db;
-            padding: 3rem;
-            border-radius: 1rem;
-            text-align: center;
-            margin-bottom: 2rem;
-            cursor: pointer;
-        }
-
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            align-items: center;
-            background: #f9fafb;
-            padding: 1.5rem;
-            border-radius: 0.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: opacity 0.2s;
-        }
-
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-pdf { background: var(--secondary); color: white; }
-
-        /* Results Table */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        th { background: #f9fafb; padding: 1rem; text-align: left; border-bottom: 2px solid #e5e7eb; }
-        td { padding: 1rem; border-bottom: 1px solid #f3f4f6; }
-
-        .preview-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+        /* Result Table */
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        .result-table th { background: var(--primary); color: white; padding: 12px; }
+        .result-table td { padding: 12px; border-bottom: 1px solid #eee; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        .btn-download { background: #28a745; text-decoration: none; padding: 5px 10px; font-size: 0.8rem; border-radius: 4px; color: white;}
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>🖼️ Image Studio</h1>
-        <p>Compress, Convert, and Create PDFs instantly.</p>
-    </header>
+<nav>
+    <a href="#" class="logo">PIXELTOOLS</a>
+    <div class="nav-links">Compress | PDF | Convert</div>
+</nav>
 
-    <div class="tools-grid">
-        <div class="tool-card"><i>🗜️</i>Compress</div>
-        <div class="tool-card"><i>📄</i>To PDF</div>
-        <div class="tool-card"><i>🔄</i>Convert</div>
-        <div class="tool-card"><i>✂️</i>Crop</div>
-        <div class="tool-card"><i>📏</i>Resize</div>
+<div class="hero">
+    <h1>Every tool you need to work with Images & PDFs</h1>
+    <p>Free, fast, and entirely in your browser.</p>
+</div>
+
+<div class="tools-container" id="toolsGrid">
+    <div class="tool-card" onclick="openTool('compress')">
+        <span class="tool-icon">🗜️</span>
+        <h3>Compress IMAGE</h3>
+        <p style="font-size: 0.8rem; color: #777;">Reduce file size while maintaining quality.</p>
+    </div>
+    <div class="tool-card" onclick="openTool('pdf')">
+        <span class="tool-icon">📄</span>
+        <h3>Image to PDF</h3>
+        <p style="font-size: 0.8rem; color: #777;">Convert images into a single PDF document.</p>
+    </div>
     </div>
 
-    <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
-        <p>📁 Drag and drop or click to upload images</p>
-        <input type="file" id="fileInput" accept="image/*" multiple hidden>
+<div id="workspace">
+    <h2 id="toolTitle">Tool Name</h2>
+    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+        <p>Click to Upload or Drag & Drop Files</p>
+        <input type="file" id="fileInput" multiple hidden onchange="handleFiles(this.files)">
     </div>
 
-    <div class="controls">
-        <div>
-            <label>Compression Level: <span id="levelLabel">0.7</span> 🎛️</label><br>
-            <input type="range" id="compressLevel" min="0.1" max="1.0" step="0.1" value="0.7">
-        </div>
-        <button class="btn btn-primary" onclick="processImages()">Process All 🚀</button>
-        <button class="btn btn-pdf" id="pdfBtn" style="display:none;" onclick="exportToPDF()">Save as PDF 📄</button>
+    <div id="settings" style="margin-top:20px;">
+        <label>Adjust Quality: <span id="qLabel">0.7</span></label><br>
+        <input type="range" id="quality" min="0.1" max="1.0" step="0.1" value="0.7" oninput="document.getElementById('qLabel').innerText=this.value">
     </div>
 
-    <div id="resultsWrapper" style="display:none;">
-        <h3>Results Table ✨</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Preview 👀</th>
-                    <th>Name 📄</th>
-                    <th>Status ✅</th>
-                    <th>Saved Size ⚖️</th>
-                    <th>Action 📥</th>
-                </tr>
-            </thead>
-            <tbody id="resultBody"></tbody>
-        </table>
-    </div>
+    <button class="btn" id="actionBtn" onclick="process()">Run Tool 🚀</button>
+
+    <table class="result-table" id="resTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>Preview 👀</th>
+                <th>File 📄</th>
+                <th>Size ⚖️</th>
+                <th>Action 📥</th>
+            </tr>
+        </thead>
+        <tbody id="resBody"></tbody>
+    </table>
+    <button class="btn" id="pdfDownload" style="display:none; background:#007bff;" onclick="downloadFinalPDF()">Download PDF 📑</button>
 </div>
 
 <script>
     const { jsPDF } = window.jspdf;
-    let currentData = [];
+    let activeTool = '';
+    let fileQueue = [];
+    let processedFiles = [];
 
-    document.getElementById('compressLevel').oninput = (e) => {
-        document.getElementById('levelLabel').innerText = e.target.value;
-    };
-
-    async function processImages() {
-        const files = document.getElementById('fileInput').files;
-        if (files.length === 0) return alert("Please upload images first.");
-
-        const quality = parseFloat(document.getElementById('compressLevel').value);
-        const resultBody = document.getElementById('resultBody');
-        resultBody.innerHTML = "";
-        currentData = [];
-
-        for (let file of files) {
-            const data = await compressFile(file, quality);
-            currentData.push(data);
-            appendRow(data);
-        }
-
-        document.getElementById('resultsWrapper').style.display = "block";
-        document.getElementById('pdfBtn').style.display = "inline-block";
+    function openTool(tool) {
+        activeTool = tool;
+        document.getElementById('toolsGrid').style.display = 'none';
+        document.getElementById('workspace').style.display = 'block';
+        document.getElementById('toolTitle').innerText = tool === 'compress' ? 'Compress Images 🗜️' : 'Convert Image to PDF 📄';
     }
 
-    function compressFile(file, quality) {
-        return new Promise((resolve) => {
+    function handleFiles(files) {
+        fileQueue = Array.from(files);
+        alert(fileQueue.length + " files selected!");
+    }
+
+    async function process() {
+        const quality = parseFloat(document.getElementById('quality').value);
+        const tbody = document.getElementById('resBody');
+        tbody.innerHTML = "";
+        processedFiles = [];
+
+        for (let file of fileQueue) {
+            const data = await processSingleFile(file, quality);
+            processedFiles.push(data);
+            
+            const row = `<tr>
+                <td><img src="${data.url}" width="50"></td>
+                <td>${data.name}</td>
+                <td>${data.size} KB</td>
+                <td><a href="${data.url}" download="fixed_${data.name}" class="btn-download">Download</a></td>
+            </tr>`;
+            tbody.insertAdjacentHTML('beforeend', row);
+        }
+        
+        document.getElementById('resTable').style.display = 'table';
+        if(activeTool === 'pdf') document.getElementById('pdfDownload').style.display = 'inline-block';
+    }
+
+    function processSingleFile(file, q) {
+        return new Promise(resolve => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = (e) => {
+            reader.onload = e => {
                 const img = new Image();
                 img.src = e.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    
-                    const compressedUrl = canvas.toDataURL('image/jpeg', quality);
-                    const originalSize = (file.size / 1024).toFixed(1);
-                    const newSize = Math.round((compressedUrl.length * 3/4) / 1024);
-                    
-                    resolve({
-                        name: file.name,
-                        oldSize: originalSize,
-                        newSize: newSize,
-                        url: compressedUrl
-                    });
-                };
-            };
+                    canvas.width = img.width; canvas.height = img.height;
+                    canvas.getContext('2d').drawImage(img, 0, 0);
+                    const url = canvas.toDataURL('image/jpeg', q);
+                    resolve({ url, name: file.name, size: Math.round(url.length/1333) });
+                }
+            }
         });
     }
 
-    function appendRow(data) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td><img src="${data.url}" class="preview-thumb"></td>
-            <td>${data.name}</td>
-            <td>Optimized 🔥</td>
-            <td>${data.newSize} KB</td>
-            <td><a href="${data.url}" download="studio_${data.name}" style="color:var(--primary); text-decoration:none; font-weight:bold;">Download 📥</a></td>
-        `;
-        document.getElementById('resultBody').appendChild(row);
-    }
-
-    function exportToPDF() {
+    function downloadFinalPDF() {
         const doc = new jsPDF();
-        currentData.forEach((img, i) => {
+        processedFiles.forEach((img, i) => {
             if (i > 0) doc.addPage();
-            const props = doc.getImageProperties(img.url);
             const width = doc.internal.pageSize.getWidth();
-            const height = (props.height * width) / props.width;
-            doc.addImage(img.url, 'JPEG', 0, 0, width, height);
+            doc.addImage(img.url, 'JPEG', 0, 0, width, 150);
         });
-        doc.save("image_studio_export.pdf");
+        doc.save("PixelTools_Export.pdf");
     }
 </script>
-
 </body>
 </html>
